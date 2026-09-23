@@ -77,6 +77,29 @@ fn diagnose_attributes(bytes : Bytes, diagnostics : Array[Diagnostic]) -> Unit {
 }
 
 ///|
+/// Diagnose a packet while also checking the declared body boundary.
+///
+/// `diagnose` is intentionally non-throwing so command-line tools can show
+/// every reliable problem in one pass. This helper adds a precise offset for
+/// bytes that exist after the declared packet length.
+pub fn diagnose_strict(bytes : Bytes) -> Array[Diagnostic] {
+  let diagnostics = diagnose(bytes)
+  if bytes.length() >= 4 {
+    let declared = (bytes[2].to_int() << 8) | bytes[3].to_int()
+    if declared >= 20 && declared < bytes.length() {
+      diagnostics.push(
+        Diagnostic::new(
+          Header,
+          declared,
+          "datagram contains bytes after declared packet length",
+        ),
+      )
+    }
+  }
+  diagnostics
+}
+
+///|
 pub fn diagnostics_are_clean(diagnostics : Array[Diagnostic]) -> Bool {
   diagnostics.length() == 0
 }
