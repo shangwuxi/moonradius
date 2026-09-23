@@ -110,3 +110,191 @@ pub fn Packet::attribute(self : Packet, kind : Byte) -> Attribute? {
   }
   None
 }
+
+///|
+/// Standard RADIUS attribute numbers from RFC 2865 and RFC 2866.
+pub const User_Name : Byte = 1
+
+///|
+pub const User_Password : Byte = 2
+
+///|
+pub const CHAP_Password : Byte = 3
+
+///|
+pub const NAS_IP_Address : Byte = 4
+
+///|
+pub const NAS_Port : Byte = 5
+
+///|
+pub const Service_Type : Byte = 6
+
+///|
+pub const Framed_Protocol : Byte = 7
+
+///|
+pub const Framed_IP_Address : Byte = 8
+
+///|
+pub const Framed_IP_Netmask : Byte = 9
+
+///|
+pub const Filter_Id : Byte = 11
+
+///|
+pub const Reply_Message : Byte = 18
+
+///|
+pub const State : Byte = 24
+
+///|
+pub const Class : Byte = 25
+
+///|
+pub const Vendor_Specific : Byte = 26
+
+///|
+pub const Session_Timeout : Byte = 27
+
+///|
+pub const Idle_Timeout : Byte = 28
+
+///|
+pub const Termination_Action : Byte = 29
+
+///|
+pub const Called_Station_Id : Byte = 30
+
+///|
+pub const Calling_Station_Id : Byte = 31
+
+///|
+pub const NAS_Identifier : Byte = 32
+
+///|
+pub const Acct_Status_Type : Byte = 40
+
+///|
+pub const Acct_Input_Octets : Byte = 42
+
+///|
+pub const Acct_Output_Octets : Byte = 43
+
+///|
+pub const Acct_Session_Id : Byte = 44
+
+///|
+pub const Acct_Session_Time : Byte = 46
+
+///|
+pub const Acct_Input_Packets : Byte = 47
+
+///|
+pub const Acct_Output_Packets : Byte = 48
+
+///|
+pub const Acct_Terminate_Cause : Byte = 49
+
+///|
+pub const Acct_Multi_Session_Id : Byte = 50
+
+///|
+pub const Acct_Link_Count : Byte = 51
+
+///|
+pub const Acct_Interim_Interval : Byte = 85
+
+///|
+/// Accounting status values defined by RFC 2866.
+pub const Acct_Start : Int = 1
+
+///|
+pub const Acct_Stop : Int = 2
+
+///|
+pub const Acct_Interim_Update : Int = 3
+
+///|
+pub const Acct_On : Int = 7
+
+///|
+pub const Acct_Off : Int = 8
+
+///|
+/// Common service types.
+pub const Login : Int = 1
+
+///|
+pub const Framed : Int = 2
+
+///|
+pub const Administrative : Int = 6
+
+///|
+pub const NAS_Prompt : Int = 7
+
+///|
+/// Construct an attribute from UTF-8 text.
+pub fn Attribute::text(kind : Byte, value : String) -> Attribute {
+  Attribute::{ kind, value: @utf8.encode(value), }
+}
+
+///|
+/// Construct an attribute containing a big-endian unsigned integer.
+pub fn Attribute::integer(kind : Byte, value : Int) -> Attribute {
+  Attribute::{ kind, value: u32_bytes(value), }
+}
+
+///|
+/// Read a four-byte unsigned integer attribute.
+pub fn Attribute::as_integer(self : Attribute) -> Int? {
+  if self.value.length() != 4 {
+    None
+  } else {
+    Some(
+      (self.value[0].to_int() << 24) |
+      (self.value[1].to_int() << 16) |
+      (self.value[2].to_int() << 8) |
+      self.value[3].to_int(),
+    )
+  }
+}
+
+///|
+/// Construct a packet with a zero authenticator, useful for requests whose
+/// authenticator is filled by a transport or authentication helper.
+pub fn Packet::request(code : Code, identifier : Byte) -> Packet {
+  Packet::new(code, identifier, zeros(16))
+}
+
+///|
+/// Return all attributes with a given type, preserving wire order.
+pub fn Packet::attributes_of(self : Packet, kind : Byte) -> Array[Attribute] {
+  let result = []
+  for item in self.attributes {
+    if item.kind == kind {
+      result.push(item)
+    }
+  }
+  result
+}
+
+///|
+/// Add an attribute without replacing existing attributes.
+pub fn Packet::push_attribute(self : Packet, attribute : Attribute) -> Packet {
+  self.attributes.push(attribute)
+  self
+}
+
+///|
+/// Return whether this packet is an Access-Request.
+pub fn Packet::is_access_request(self : Packet) -> Bool {
+  self.header.code == AccessRequest
+}
+
+///|
+/// Return whether this packet is an Accounting-Request.
+pub fn Packet::is_accounting_request(self : Packet) -> Bool {
+  self.header.code == AccountingRequest
+}

@@ -1,2 +1,4 @@
 import {
+  "gmlewis/md5",
+  "moonbitlang/core/encoding/utf8",
 }

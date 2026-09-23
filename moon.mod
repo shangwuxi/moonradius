@@ -11,3 +11,7 @@ license = "Apache-2.0"
 keywords = [ "radius", "aaa", "network", "authentication", "accounting" ]
 
 description = "A transport-independent RADIUS packet and attribute toolkit for MoonBit."
+
+import {
+  "gmlewis/md5@0.20.0",
+}
