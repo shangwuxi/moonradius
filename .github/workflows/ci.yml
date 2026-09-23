@@ -1,0 +1,20 @@
+name: MoonBit checks
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install MoonBit
+        uses: moonbitlang/setup-moonbit@v1
+      - name: Format check
+        run: moon fmt --check
+      - name: Static check
+        run: moon check --target wasm-gc --deny-warn
+      - name: Tests
+        run: moon test --target wasm-gc
