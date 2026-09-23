@@ -34,6 +34,9 @@ pub fn encode(packet : Packet) -> Bytes raise RadiusError {
   }
   let mut body = b""
   for attribute in packet.attributes {
+    if attribute.kind.to_int() == 0 {
+      raise InvalidAttribute("attribute type zero is reserved")
+    }
     if attribute.value.length() > 253 {
       raise InvalidAttribute("attribute value exceeds 253 bytes")
     }
@@ -62,6 +65,9 @@ pub fn encode_attributes(
 ) -> Bytes raise RadiusError {
   let mut body = b""
   for attribute in attributes {
+    if attribute.kind.to_int() == 0 {
+      raise InvalidAttribute("attribute type zero is reserved")
+    }
     if attribute.value.length() > 253 {
       raise InvalidAttribute("attribute value exceeds 253 bytes")
     }
@@ -104,6 +110,9 @@ pub fn decode(bytes : Bytes) -> Packet raise RadiusError {
       raise AttributeTruncated(offset)
     }
     let kind = bytes[offset]
+    if kind.to_int() == 0 {
+      raise InvalidAttribute("attribute type zero is reserved")
+    }
     let length = bytes[offset + 1].to_int()
     if length < 2 {
       raise AttributeTooShort(offset)
