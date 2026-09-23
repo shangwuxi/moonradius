@@ -112,6 +112,30 @@ pub fn Packet::attribute(self : Packet, kind : Byte) -> Attribute? {
 }
 
 ///|
+/// Expose the packet code without requiring callers to inspect the header.
+pub fn Packet::code(self : Packet) -> Code {
+  self.header.code
+}
+
+///|
+/// Return the RADIUS identifier used to correlate a response.
+pub fn Packet::identifier(self : Packet) -> Byte {
+  self.header.identifier
+}
+
+///|
+/// Return a defensive copy of the request or response authenticator.
+pub fn Packet::authenticator(self : Packet) -> Bytes {
+  self.header.authenticator.copy()
+}
+
+///|
+/// Return a defensive copy of all attributes in wire order.
+pub fn Packet::all_attributes(self : Packet) -> Array[Attribute] {
+  self.attributes.copy()
+}
+
+///|
 /// Standard RADIUS attribute numbers from RFC 2865 and RFC 2866.
 pub const User_Name : Byte = 1
 
