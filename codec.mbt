@@ -56,6 +56,29 @@ pub fn encode(packet : Packet) -> Bytes raise RadiusError {
 }
 
 ///|
+/// Encode only the attribute stream, preserving duplicate and unknown entries.
+pub fn encode_attributes(
+  attributes : Array[Attribute],
+) -> Bytes raise RadiusError {
+  let mut body = b""
+  for attribute in attributes {
+    if attribute.value.length() > 253 {
+      raise InvalidAttribute("attribute value exceeds 253 bytes")
+    }
+    let length = attribute.value.length() + 2
+    let prefix = bytes_from_array([attribute.kind, byte_at(length)])
+    body = join_bytes(body, join_bytes(prefix, attribute.value))
+  }
+  body
+}
+
+///|
+/// Return the number of bytes occupied by a complete packet.
+pub fn packet_length(packet : Packet) -> Int raise RadiusError {
+  20 + encode_attributes(packet.attributes).length()
+}
+
+///|
 pub fn decode(bytes : Bytes) -> Packet raise RadiusError {
   if bytes.length() < 20 {
     raise TooShort
