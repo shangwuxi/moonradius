@@ -298,3 +298,48 @@ pub fn Packet::is_access_request(self : Packet) -> Bool {
 pub fn Packet::is_accounting_request(self : Packet) -> Bool {
   self.header.code == AccountingRequest
 }
+
+///|
+/// Return a packet with the same header and a filtered attribute stream.
+pub fn Packet::filter_attributes(
+  self : Packet,
+  predicate : (Attribute) -> Bool,
+) -> Packet {
+  let attributes = []
+  for attribute in self.attributes {
+    if predicate(attribute) {
+      attributes.push(attribute)
+    }
+  }
+  Packet::{ header: self.header, attributes, }
+}
+
+///|
+/// Return a packet with one attribute type removed.
+pub fn Packet::without_attribute(self : Packet, kind : Byte) -> Packet {
+  self.filter_attributes(fn(attribute) { attribute.kind != kind })
+}
+
+///|
+/// Return a packet with all copies of a type replaced by one value.
+pub fn Packet::replace_attribute(
+  self : Packet,
+  kind : Byte,
+  replacement : Attribute,
+) -> Packet {
+  let filtered = self.without_attribute(kind)
+  filtered.with_attribute(replacement)
+}
+
+///|
+/// Return a stable copy of the packet for response construction.
+pub fn Packet::copy(self : Packet) -> Packet {
+  Packet::{
+    header: Header::{
+      code: self.header.code,
+      identifier: self.header.identifier,
+      authenticator: self.header.authenticator,
+    },
+    attributes: self.attributes.copy(),
+  }
+}
