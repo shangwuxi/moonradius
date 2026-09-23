@@ -1,10 +1,46 @@
 /// Accounting helpers for RFC 2866 start, interim, and stop records.
 
 ///|
+/// The lifecycle class of an Accounting-Request.
+pub enum AccountingEvent {
+  Start
+  Interim
+  Stop
+  AdministrativeOn
+  AdministrativeOff
+  UnknownStatus(Int)
+  MissingStatus
+} derive(Eq, Debug)
+
+///|
 pub fn accounting_status(packet : Packet) -> Int? {
   match packet.attribute(Acct_Status_Type) {
     Some(attribute) => attribute.as_integer()
     None => None
+  }
+}
+
+///|
+/// Classify the status attribute without making callers depend on numeric
+/// RFC constants.
+pub fn accounting_event(packet : Packet) -> AccountingEvent {
+  match accounting_status(packet) {
+    None => MissingStatus
+    Some(Acct_Start) => Start
+    Some(Acct_Interim_Update) => Interim
+    Some(Acct_Stop) => Stop
+    Some(Acct_On) => AdministrativeOn
+    Some(Acct_Off) => AdministrativeOff
+    Some(value) => UnknownStatus(value)
+  }
+}
+
+///|
+/// Return a stable session label for logs and accounting adapters.
+pub fn accounting_session_label(packet : Packet) -> String {
+  match accounting_session_id(packet) {
+    Some(value) if value.length() > 0 => value
+    _ => "<missing-session-id>"
   }
 }
 
