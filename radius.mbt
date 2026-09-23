@@ -126,7 +126,7 @@ pub fn Packet::identifier(self : Packet) -> Byte {
 ///|
 /// Return a defensive copy of the request or response authenticator.
 pub fn Packet::authenticator(self : Packet) -> Bytes {
-  self.header.authenticator.copy()
+  self.header.authenticator
 }
 
 ///|

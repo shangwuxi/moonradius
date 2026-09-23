@@ -49,3 +49,18 @@ test "typed IPv4 and attribute builders preserve values" {
     None => abort("valid IPv4 rejected")
   }
 }
+
+///|
+test "server drops malformed decoded packets before policy evaluation" {
+  let packet = Packet::new(AccessRequest, 8, b"\x00")
+  let server = RadiusServer::new(
+    ServerConfig::new(b"secret", AccessPolicy::new()),
+  )
+  match server.handle(packet) {
+    Response(_) => abort("malformed packet must not reach policy")
+    Drop(messages) => {
+      assert_true(messages.length() == 1)
+      assert_eq(server.rejected_count(), 1)
+    }
+  }
+}
