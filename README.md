@@ -18,7 +18,7 @@ MoonRADIUS 是一个面向 MoonBit 的 RADIUS/AAA 协议基础库。它把报文
 - 字典查询、重复属性保留、未知属性保留、稳定结构诊断；
 - PAP/CHAP 访问策略、Accounting 记录抽取、内存 DatagramTransport；
 - 重传/冲突分类和 identifier/request-authenticator 关联；
-- 23 个白盒/黑盒测试，包含正例、截断、非法长度、认证和完整工作流。
+- 31 个白盒/黑盒测试，包含正例、截断、非法长度、认证和完整工作流。
 
 ## 三个可运行示例
 
