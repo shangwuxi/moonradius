@@ -13,6 +13,12 @@ pub enum AccountingEvent {
 } derive(Eq, Debug)
 
 ///|
+pub extend AccountingEvent with Eq::{not_equal, equal}
+
+///|
+pub extend AccountingEvent with @moonbitlang/core/debug.Debug::{to_repr}
+
+///|
 pub fn accounting_status(packet : Packet) -> Int? {
   match packet.attribute(Acct_Status_Type) {
     Some(attribute) => attribute.as_integer()

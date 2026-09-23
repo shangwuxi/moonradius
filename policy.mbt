@@ -11,6 +11,12 @@ pub enum AccessDecision {
 } derive(Eq, Debug)
 
 ///|
+pub extend AccessDecision with Eq::{not_equal, equal}
+
+///|
+pub extend AccessDecision with @moonbitlang/core/debug.Debug::{to_repr}
+
+///|
 pub struct Credential {
   username : String
   password : Bytes

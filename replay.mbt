@@ -11,6 +11,12 @@ pub enum RequestDisposition {
 } derive(Eq, Debug)
 
 ///|
+pub extend RequestDisposition with Eq::{not_equal, equal}
+
+///|
+pub extend RequestDisposition with @moonbitlang/core/debug.Debug::{to_repr}
+
+///|
 pub struct RequestKey {
   identifier : Byte
   authenticator : Bytes

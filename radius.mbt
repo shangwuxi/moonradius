@@ -12,6 +12,12 @@ pub enum Code {
 } derive(Eq, Debug)
 
 ///|
+pub extend Code with Eq::{not_equal, equal}
+
+///|
+pub extend Code with @moonbitlang/core/debug.Debug::{to_repr}
+
+///|
 pub fn Code::from_int(value : Int) -> Code {
   match value {
     1 => AccessRequest

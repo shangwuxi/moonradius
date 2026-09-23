@@ -69,6 +69,12 @@ pub enum FramedProtocolValue {
 } derive(Eq, Debug)
 
 ///|
+pub extend FramedProtocolValue with Eq::{not_equal, equal}
+
+///|
+pub extend FramedProtocolValue with @moonbitlang/core/debug.Debug::{to_repr}
+
+///|
 pub fn FramedProtocolValue::to_int(self : FramedProtocolValue) -> Int {
   match self {
     PPP => 1
@@ -102,6 +108,12 @@ pub enum TerminationCause {
   NASRequest
   NASReboot
 } derive(Eq, Debug)
+
+///|
+pub extend TerminationCause with Eq::{not_equal, equal}
+
+///|
+pub extend TerminationCause with @moonbitlang/core/debug.Debug::{to_repr}
 
 ///|
 pub fn TerminationCause::to_int(self : TerminationCause) -> Int {

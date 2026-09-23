@@ -6,6 +6,12 @@ pub enum DiagnosticKind {
 } derive(Eq, Debug)
 
 ///|
+pub extend DiagnosticKind with Eq::{not_equal, equal}
+
+///|
+pub extend DiagnosticKind with @moonbitlang/core/debug.Debug::{to_repr}
+
+///|
 pub struct Diagnostic {
   kind : DiagnosticKind
   offset : Int
