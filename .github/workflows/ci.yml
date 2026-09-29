@@ -19,7 +19,11 @@ jobs:
         run: moon update
       - name: Format check
         run: moon fmt --check
-      - name: Static check
+      - name: Static check (wasm-gc)
         run: moon check --target wasm-gc --deny-warn
-      - name: Tests
-        run: moon test --target wasm-gc
+      - name: Build (wasm-gc)
+        run: moon build --target wasm-gc --deny-warn
+      - name: Test (wasm-gc)
+        run: moon test --target wasm-gc --deny-warn
+      - name: Run minimal example
+        run: moon run examples/minimal

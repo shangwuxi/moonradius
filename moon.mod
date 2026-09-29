@@ -8,6 +8,8 @@ repository = "https://github.com/shangwuxi/moonradius"
 
 license = "Apache-2.0"
 
+preferred_target = "wasm-gc"
+
 keywords = [ "radius", "aaa", "network", "authentication", "accounting" ]
 
 description = "A transport-independent RADIUS packet and attribute toolkit for MoonBit."
