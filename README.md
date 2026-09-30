@@ -9,7 +9,7 @@ MoonRADIUS 是一个面向 MoonBit 的 RADIUS/AAA 协议基础库。它把报文
 需要 MoonBit 工具链版本不低于 0.10.14（本项目 CI 使用 MoonBit CLI 的稳定版本）。
 
 ```bash
-moon add shangwuxi/moonradius@0.1.0
+moon add shangwuxi/moonradius@0.1.1
 ```
 
 在代码中导入：

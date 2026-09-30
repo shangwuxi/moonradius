@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1 - 2026-09-30
+
+- 增加可直接运行的 `examples/minimal` 示例。
+- CI 增加独立构建步骤和最小示例执行。
+- README 补充安装、复现命令和预期输出。
+- 补全 Apache License 2.0 标准许可证文本。
+
 ## Unreleased
 
 - 完成 RADIUS 报文/属性编解码、PAP/CHAP、响应认证器和 Accounting；
